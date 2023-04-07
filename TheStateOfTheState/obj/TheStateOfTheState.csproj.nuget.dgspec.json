@@ -1,0 +1,74 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\School\\Computer Science\\Android\\Final Project\\Politics\\The-State-Of-The-State\\TheStateOfTheState\\TheStateOfTheState.csproj": {}
+  },
+  "projects": {
+    "C:\\School\\Computer Science\\Android\\Final Project\\Politics\\The-State-Of-The-State\\TheStateOfTheState\\TheStateOfTheState.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\School\\Computer Science\\Android\\Final Project\\Politics\\The-State-Of-The-State\\TheStateOfTheState\\TheStateOfTheState.csproj",
+        "projectName": "TheStateOfTheState",
+        "projectPath": "C:\\School\\Computer Science\\Android\\Final Project\\Politics\\The-State-Of-The-State\\TheStateOfTheState\\TheStateOfTheState.csproj",
+        "packagesPath": "C:\\Users\\zivc8\\.nuget\\packages\\",
+        "outputPath": "C:\\School\\Computer Science\\Android\\Final Project\\Politics\\The-State-Of-The-State\\TheStateOfTheState\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\zivc8\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "monoandroid12.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "monoandroid12.0": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "monoandroid12.0": {
+          "dependencies": {
+            "Xamarin.Android.Support.Media.Compat": {
+              "target": "Package",
+              "version": "[28.0.0.3, )"
+            },
+            "Xamarin.AndroidX.AppCompat": {
+              "target": "Package",
+              "version": "[1.2.0.5, )"
+            },
+            "Xamarin.AndroidX.Media": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "Xamarin.Essentials": {
+              "target": "Package",
+              "version": "[1.6.1, )"
+            },
+            "Xamarin.Firebase.Annotations": {
+              "target": "Package",
+              "version": "[116.1.0.1, )"
+            },
+            "Xamarin.Firebase.Auth": {
+              "target": "Package",
+              "version": "[60.1142.1, )"
+            },
+            "Xamarin.Google.Android.Material": {
+              "target": "Package",
+              "version": "[1.0.0.1, )"
+            },
+            "Xamarin.Google.Guava": {
+              "target": "Package",
+              "version": "[27.1.0.1, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}
