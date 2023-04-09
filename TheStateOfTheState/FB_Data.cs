@@ -66,31 +66,11 @@ namespace TheStateOfTheState
         }
         public async System.Threading.Tasks.Task<Results_Structure> RetrieveResults(int questionId)
         {
-            var a = await firebase_client.Child("Results/Q" + questionId + "/matrix").OnceSingleAsync<Dictionary<string, Dictionary<string, int>>>();
-            var a1 = await firebase_client.Child("Results/Q" + questionId + "/matrix/answer_1").OnceSingleAsync<Dictionary<string, int>>();
-            var a2 = await firebase_client.Child("Results/Q" + questionId + "/matrix/answer_2").OnceSingleAsync<Dictionary<string, int>>();
-            var a3 = await firebase_client.Child("Results/Q" + questionId + "/matrix/answer_3").OnceSingleAsync<Dictionary<string, int>>();
-            var a4 = await firebase_client.Child("Results/Q" + questionId + "/matrix/answer_4").OnceSingleAsync<Dictionary<string, int>>();
-            var a5 = await firebase_client.Child("Results/Q" + questionId + "/matrix/answer_5").OnceSingleAsync<Dictionary<string, int>>();
-            Results_Structure result = new Results_Structure(a1, a2, a3, a4, a5);
-
-
-            if (result != null)
-            {
-                if (result.A1 != null)
-                {
-                    Console.WriteLine(result.A1["age"]);
-                }
-                else
-                {
-                    Console.WriteLine("oof");
-                }
-            }
-            else
-            {
-                Console.WriteLine("bad");
-            }
-            return result;
+            Results_Structure res = new Results_Structure();
+            res.General_Matrix = await firebase_client.Child("Results/Q" + questionId + "/general").OnceSingleAsync<Dictionary<string, int>>();
+            res.Ori_Matrix = await firebase_client.Child("Results/Q" + questionId + "/orientation").OnceSingleAsync<Dictionary<string, Dictionary<string, int>>>();
+            res.Rel_Matrix = await firebase_client.Child("Results/Q" + questionId + "/religion").OnceSingleAsync<Dictionary<string, Dictionary<string, int>>>();
+            return res;
         }
     }
 }

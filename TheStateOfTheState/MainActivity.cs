@@ -165,7 +165,6 @@ namespace TheStateOfTheState
             usersRef.Child(userId).Child("religion").SetValue((int)user.Religion);
             usersRef.Child(userId).Child("orientation").SetValue((int)user.Orientation);
             usersRef.Child(userId).Child("score").SetValue(user.Score);
-            usersRef.Child(userId).Child("answers").SetValue(user.Answers);
 
             // Save userId to SharedPreferences
             ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);

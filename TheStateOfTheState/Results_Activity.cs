@@ -16,6 +16,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using Android.Preferences;
 using Newtonsoft.Json;
+using Firebase.Database;
 
 namespace TheStateOfTheState
 {
@@ -26,7 +27,8 @@ namespace TheStateOfTheState
         private NavigationView navigationView;
         private AndroidX.AppCompat.Widget.Toolbar toolbar;
 
-        private TextView name, score, answers;
+        private Button exit;
+        private TextView name, score;
         private FB_Data fbd;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -38,7 +40,7 @@ namespace TheStateOfTheState
 
             name = FindViewById<TextView>(Resource.Id.text_user_name);
             score = FindViewById<TextView>(Resource.Id.text_user_score);
-            answers = FindViewById<TextView>(Resource.Id.text_anum_weekly);
+            exit = FindViewById<Button>(Resource.Id.button_exit);
 
             // Set up the toolbar
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -64,7 +66,12 @@ namespace TheStateOfTheState
             GetUserAsync(fbd, userId);
 
             LoadData(fbd);
-            LoadGraphs();
+            exit.Click += Exit_Click;
+        }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            System.Environment.Exit(0);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -94,78 +101,99 @@ namespace TheStateOfTheState
             // Retrieve user object from Firebase
             var user = await fbd.RetrieveUser(userId);
 
-            name.Text = name.Text + user.Name;
-            score.Text = score.Text + user.Score;
-            answers.Text = answers.Text + user.Answers;
+            name.Text = "Name: " + user.Name;
+            score.Text = "Score: " + user.Score;
         }
 
-
-        public void LoadGraphs()
-        {
-            // Create the plot model
-            var plotModel = new PlotModel { Title = "My Plot" };
-
-            // Create the axes
-            var xAxis = new LinearAxis { Position = AxisPosition.Bottom };
-            var yAxis = new LinearAxis { Position = AxisPosition.Left };
-
-            // Create the series and add data points
-            var series1 = new LineSeries
-            {
-                Title = "Series 1",
-                MarkerType = MarkerType.Circle,
-                MarkerSize = 4,
-                MarkerStroke = OxyColors.White,
-                MarkerFill = OxyColors.SkyBlue,
-                Color = OxyColors.SkyBlue,
-                StrokeThickness = 2
-            };
-
-            series1.Points.Add(new DataPoint(0, 0));
-            series1.Points.Add(new DataPoint(1, 1));
-            series1.Points.Add(new DataPoint(2, 2));
-            series1.Points.Add(new DataPoint(3, 3));
-
-            var series2 = new LineSeries
-            {
-                Title = "Series 2",
-                MarkerType = MarkerType.Square,
-                MarkerSize = 4,
-                MarkerStroke = OxyColors.White,
-                MarkerFill = OxyColors.PaleVioletRed,
-                Color = OxyColors.PaleVioletRed,
-                StrokeThickness = 2
-            };
-
-            series2.Points.Add(new DataPoint(0, 1));
-            series2.Points.Add(new DataPoint(1, 2));
-            series2.Points.Add(new DataPoint(2, 3));
-            series2.Points.Add(new DataPoint(3, 4));
-
-            // Add the series to the plot model
-            plotModel.Series.Add(series1);
-            plotModel.Series.Add(series2);
-
-            // Set the axes on the plot model
-            plotModel.Axes.Add(xAxis);
-            plotModel.Axes.Add(yAxis);
-
-            // Assign the plot model to the plot view
-            var plotView = FindViewById<OxyPlot.Xamarin.Android.PlotView>(Resource.Id.graph_1);
-            plotView.Model = plotModel;
-        }
         private void LoadData(FB_Data fbd)
         {
-            for(int i = 0; i<1; i++)
+            for (int i = 1; i <= General.Q_NUM; i++)
             {
                 GetResultsAsync(fbd, i);
             }
         }
         private async void GetResultsAsync(FB_Data fbd, int questionId)
         {
+            var type = General.KEY_ORI;
+
             // Retrieve question results object from Firebase
             var tmp = await fbd.RetrieveResults(questionId);
+            LoadGraph(tmp, questionId, type);
 
         }
+        public void LoadGraph(Results_Structure data, int questionId, string type)
+        {
+            OxyColor[] colors = { OxyColors.Blue, OxyColors.Red, OxyColors.Green, OxyColors.Orange, OxyColors.Purple, OxyColors.Brown, OxyColors.Yellow, OxyColors.Gray, OxyColors.Pink, OxyColors.Teal };
+
+            var plotModel = new PlotModel
+            {
+                Title = "Answers to Question " + questionId,
+                Subtitle = "By " + type,
+                LegendPosition = LegendPosition.TopRight,
+                LegendOrientation = LegendOrientation.Vertical,
+                LegendPlacement = LegendPlacement.Outside,
+                LegendItemSpacing = 8,
+                PlotMargins = new OxyThickness(60, 20, 20, 40)
+            };
+
+            var categoryAxis = new CategoryAxis
+            {
+                Position = AxisPosition.Bottom,
+                Title = "Category",
+                IsZoomEnabled = false,
+                IsPanEnabled = false
+            };
+
+            // Answers - X axis
+            var tmp = new Dictionary<string, Dictionary<string, int>>();
+            if (type == General.KEY_ORI)
+            {
+                tmp = data.Ori_Matrix;
+            }
+            else //if(type == General.KEY_REL)
+            {
+                tmp = data.Rel_Matrix;
+            }
+
+            foreach (var i in tmp.Keys)
+            {
+                categoryAxis.Labels.Add(i);
+            }
+            plotModel.Axes.Add(categoryAxis);
+
+            var valueAxis = new LinearAxis
+            {
+                Position = AxisPosition.Left,
+                Title = "Value",
+                IsZoomEnabled = false,
+                IsPanEnabled = false
+            };
+            plotModel.Axes.Add(valueAxis);
+
+            // Options - sub X axis
+            for (int i = 0; i < (int)General.OrientationTypes.Length; i++)
+            {
+                var series = new ColumnSeries
+                {
+                    Title = ((General.OrientationTypes)i).ToString(),
+                    FillColor = colors[i],
+                    StrokeColor = OxyColors.Black,
+                    StrokeThickness = 1
+                };
+
+                foreach(var answer in tmp.Keys)
+                {
+                    series.Items.Add(new ColumnItem(tmp[answer]["option_" + i]));
+                }
+                plotModel.Series.Add(series);
+
+            }
+
+            // Assign the plot model to the plot view
+            var resourceId = Resources.GetIdentifier("graph_" + questionId, "id", PackageName);
+            var plotView = FindViewById<OxyPlot.Xamarin.Android.PlotView>(resourceId);
+            plotView.Model = plotModel;
+        }
+
     }
 }

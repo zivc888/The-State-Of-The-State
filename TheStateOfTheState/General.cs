@@ -11,7 +11,7 @@ using System.Text;
 
 namespace TheStateOfTheState
 {
-    static class General
+    public static class General
     {
         public const string SP_FILE_NAME = "data.sp";
         public const string KEY_NAME = "Name";
@@ -21,9 +21,11 @@ namespace TheStateOfTheState
         public const string KEY_CITY = "city";
         public const string KEY_REL = "religion";
         public const string KEY_ORI = "orientation";
+        public const string KEY_GEN = "general";
         public const string KEY_CAMERA_IMAGE = "data";
         public const int REQUEST_REGISTER = 1;
-        public enum ReligionTypes { Secular_Jew, Traditional_Jew, Religious_Jew, Orthodox_Jew, Secular_Arab, Religious_Arab };
-        public enum OrientationTypes { Extreme_Left, Left, Center_Left, Center, Center_Right, Right, Extreme_Right };
+        public const int Q_NUM = 2;
+        public enum ReligionTypes { Secular_Jew, Traditional_Jew, Religious_Jew, Orthodox_Jew, Secular_Arab, Religious_Arab, Length };
+        public enum OrientationTypes { Extreme_Left, Left, Center_Left, Center, Center_Right, Right, Extreme_Right, Length };
     }
 }

@@ -22,7 +22,7 @@ namespace TheStateOfTheState
         bool exist;
         readonly SP_data spd;
 
-        int Anum, score;
+        int score;
 
         public User(Context ctx)
         {
@@ -49,7 +49,6 @@ namespace TheStateOfTheState
             this.exist = exist;
 
             score = 0;
-            Anum = 0;
         }
 
         public User(User user)
@@ -63,7 +62,6 @@ namespace TheStateOfTheState
             this.orientation = user.Orientation;
             this.exist = user.Exist;
             this.score = user.Score;
-            this.Anum = user.Anum;
         }
 
         public User()
@@ -77,7 +75,6 @@ namespace TheStateOfTheState
             orientation = 0;
             exist = false;
             spd = null;
-            Anum = 0;
             score = 0;
         }
 
@@ -89,7 +86,6 @@ namespace TheStateOfTheState
         public General.ReligionTypes Religion { get => religion; set => religion = value; }
         public General.OrientationTypes Orientation { get => orientation; set => orientation = value; }
         public int Score { get => score; set => score = value; }
-        public int Answers { get => Anum; set => Anum = value; }
 
         public bool Exist { get => exist; set => exist = value; }
 

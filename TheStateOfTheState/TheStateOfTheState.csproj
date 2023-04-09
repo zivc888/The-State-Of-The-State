@@ -61,11 +61,13 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnswerClass.cs" />
     <Compile Include="FB_Data.cs" />
     <Compile Include="General.cs" />
     <Compile Include="Home_Activity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NavigationItemSelectedListener.cs" />
+    <Compile Include="QuestionClass.cs" />
     <Compile Include="Register_Activity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Results_Screen.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Radio_Answer.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
