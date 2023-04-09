@@ -25,8 +25,5 @@ namespace TheStateOfTheState
         public const int REQUEST_REGISTER = 1;
         public enum ReligionTypes { Secular_Jew, Traditional_Jew, Religious_Jew, Orthodox_Jew, Secular_Arab, Religious_Arab };
         public enum OrientationTypes { Extreme_Left, Left, Center_Left, Center, Center_Right, Right, Extreme_Right };
-
-        private const string FirebaseEndpoint = "https://the-state-of-the-state-default-rtdb.firebaseio.com";
-        private const string FirebaseAuthToken = "MCcuulDEqpm8exd8IzoogoUe5O0uh0tKgbi1DhYI";
     }
 }

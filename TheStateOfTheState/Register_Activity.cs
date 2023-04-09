@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using Firebase.Database;
 
 namespace TheStateOfTheState
 {
@@ -68,10 +69,17 @@ namespace TheStateOfTheState
         {
             bool tmp1 = UpdateReligion(sender, e);
             bool tmp2 = UpdateOrientation(sender, e);
-            user = new User(name.Text, mail.Text, password.Text, city.Text, int.Parse(age.Text), religion, orientation, false);
-            if (user.Name != string.Empty && user.Mail != string.Empty && user.Pwd != string.Empty && city.Text != string.Empty && age.Text != string.Empty && tmp1 && tmp2)
+            if(tmp1 && tmp2)
             {
-                fbd.CreateUser(user.Mail, user.Pwd).AddOnCompleteListener(this);
+                user = new User(name.Text, mail.Text, password.Text, city.Text, int.Parse(age.Text), religion, orientation, false);
+                if (user.Name != string.Empty && user.Mail != string.Empty && user.Pwd != string.Empty && city.Text != string.Empty && age.Text != string.Empty)
+                {
+                    fbd.CreateUser(user.Mail, user.Pwd).AddOnCompleteListener(this);
+                }
+                else
+                {
+                    Toast.MakeText(this, "Enter all values", ToastLength.Short).Show();
+                }
             }
             else
             {
@@ -100,7 +108,7 @@ namespace TheStateOfTheState
             }
         }
 
-        public bool UpdateReligion(object sender, EventArgs e)
+        private bool UpdateReligion(object sender, EventArgs e)
         {
             RadioButton[] ReligionRadioButtons = { r1, r2, r3, r4, r5, r6 };
 
@@ -115,7 +123,7 @@ namespace TheStateOfTheState
             return false;
         }
 
-        public bool UpdateOrientation(object sender, EventArgs e)
+        private bool UpdateOrientation(object sender, EventArgs e)
         {
             RadioButton[] OrientationRadioButtons = { o1, o2, o3, o4, o5, o6, o7 };
 
@@ -130,16 +138,5 @@ namespace TheStateOfTheState
             return false;
 
         }
-
-        /*
-        public async Task SaveToFirebase(User user)
-        {
-            var httpClient = new HttpClient();
-            var json = JsonConvert.SerializeObject(user);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync($"{General.FirebaseEndpoint}/users.json?auth={General.FirebaseAuthToken}", content);
-            response.EnsureSuccessStatusCode();
-        }
-        */
     }
 }

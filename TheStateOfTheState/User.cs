@@ -21,25 +21,8 @@ namespace TheStateOfTheState
         General.OrientationTypes orientation;
         bool exist;
         readonly SP_data spd;
-        FB_Data fbd;
 
-        public User(string name, string mail, string pwd, bool exist)
-        {
-            this.name = name.Trim();
-            this.mail = mail.Trim();
-            this.pwd = pwd.Trim();
-            this.exist = exist;
-        }
-
-        public string Name { get => name; set => name = value; }
-        public string Mail { get => mail; set => mail = value; }
-        public string Pwd { get => pwd; set => pwd = value; }
-        public string City { get => city; set => city = value; }
-        public int Age { get => age; set => age = value; }
-        public General.ReligionTypes Religion { get => religion; set => religion = value; }
-        public General.OrientationTypes Orientation { get => orientation; set => orientation = value; }
-
-        public bool Exist { get => exist; set => exist = value; }
+        int Anum, score;
 
         public User(Context ctx)
         {
@@ -64,7 +47,51 @@ namespace TheStateOfTheState
             this.religion = religion;
             this.orientation = orientation;
             this.exist = exist;
+
+            score = 0;
+            Anum = 0;
         }
+
+        public User(User user)
+        {
+            this.name = user.Name;
+            this.mail = user.Mail;
+            this.pwd = user.Pwd;
+            this.city = user.City;
+            this.age = user.Age;
+            this.religion = user.Religion;
+            this.orientation = user.Orientation;
+            this.exist = user.Exist;
+            this.score = user.Score;
+            this.Anum = user.Anum;
+        }
+
+        public User()
+        {
+            name = "";
+            mail = "";
+            pwd = "";
+            city = "";
+            age = 0;
+            religion = 0;
+            orientation = 0;
+            exist = false;
+            spd = null;
+            Anum = 0;
+            score = 0;
+        }
+
+        public string Name { get => name; set => name = value; }
+        public string Mail { get => mail; set => mail = value; }
+        public string Pwd { get => pwd; set => pwd = value; }
+        public string City { get => city; set => city = value; }
+        public int Age { get => age; set => age = value; }
+        public General.ReligionTypes Religion { get => religion; set => religion = value; }
+        public General.OrientationTypes Orientation { get => orientation; set => orientation = value; }
+        public int Score { get => score; set => score = value; }
+        public int Answers { get => Anum; set => Anum = value; }
+
+        public bool Exist { get => exist; set => exist = value; }
 
         public bool Save()
         {

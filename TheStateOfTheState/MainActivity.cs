@@ -3,12 +3,14 @@ using Android.App;
 using Android.Content;
 using Android.Gms.Tasks;
 using Android.OS;
+using Android.Preferences;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 using Java.Util;
 
 namespace TheStateOfTheState
@@ -106,8 +108,13 @@ namespace TheStateOfTheState
                     user.Name = data.GetStringExtra(General.KEY_NAME);
                     user.Mail = data.GetStringExtra(General.KEY_MAIL);
                     user.Pwd = data.GetStringExtra(General.KEY_PWD);
+                    user.Age = data.GetIntExtra(General.KEY_AGE, 0);
+                    user.City = data.GetStringExtra(General.KEY_CITY);
+                    user.Orientation = (General.OrientationTypes)data.GetIntExtra(General.KEY_ORI, 0);
+                    user.Religion = (General.ReligionTypes)data.GetIntExtra(General.KEY_REL, 0);
 
                     ShowUserData();
+                    SaveToFirebase();
                 }
             }
         }
@@ -138,6 +145,35 @@ namespace TheStateOfTheState
         {
             tskReset = fbd.ResetPassword(user.Mail);
             tskReset.AddOnCompleteListener(this);
+        }
+
+        private void SaveToFirebase()
+        {
+            // Get a reference to the 'users' child node under the root node
+            FirebaseDatabase firebase = FirebaseDatabase.GetInstance("https://the-state-of-the-state-default-rtdb.firebaseio.com");
+            DatabaseReference usersRef = firebase.GetReference("users");
+
+            // Generate a new unique ID for the user
+            string userId = usersRef.Push().Key;
+
+            // Set the user data at the newly generated user ID node
+            usersRef.Child(userId).Child("mail").SetValue(user.Mail);
+            usersRef.Child(userId).Child("password").SetValue(user.Pwd);
+            usersRef.Child(userId).Child("name").SetValue(user.Name);
+            usersRef.Child(userId).Child("age").SetValue(user.Age);
+            usersRef.Child(userId).Child("city").SetValue(user.City);
+            usersRef.Child(userId).Child("religion").SetValue((int)user.Religion);
+            usersRef.Child(userId).Child("orientation").SetValue((int)user.Orientation);
+            usersRef.Child(userId).Child("score").SetValue(user.Score);
+            usersRef.Child(userId).Child("answers").SetValue(user.Answers);
+
+            // Save userId to SharedPreferences
+            ISharedPreferences prefs = PreferenceManager.GetDefaultSharedPreferences(this);
+            ISharedPreferencesEditor editor = prefs.Edit();
+            editor.PutString("userId", userId);
+            editor.Apply();
+
+            Toast.MakeText(this, "User saved successfuly", ToastLength.Long).Show();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
