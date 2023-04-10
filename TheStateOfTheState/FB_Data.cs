@@ -96,6 +96,9 @@ namespace TheStateOfTheState
 
             return questions;
         }
-
+        public async System.Threading.Tasks.Task<int> RetrieveQNUM()
+        {
+            return await firebase_client.Child("Q_NUM").OnceSingleAsync<int>();
+        }
     }
 }

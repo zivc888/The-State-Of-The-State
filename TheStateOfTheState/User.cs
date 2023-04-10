@@ -23,6 +23,7 @@ namespace TheStateOfTheState
         readonly SP_data spd;
 
         int score;
+        Dictionary<string, string> answers;
 
         public User(Context ctx)
         {
@@ -49,6 +50,7 @@ namespace TheStateOfTheState
             this.exist = exist;
 
             score = 0;
+            answers = new Dictionary<string, string>();
         }
 
         public User(User user)
@@ -62,6 +64,7 @@ namespace TheStateOfTheState
             this.orientation = user.Orientation;
             this.exist = user.Exist;
             this.score = user.Score;
+            this.answers = user.answers;
         }
 
         public User()
@@ -76,6 +79,7 @@ namespace TheStateOfTheState
             exist = false;
             spd = null;
             score = 0;
+            answers = new Dictionary<string, string>();
         }
 
         public string Name { get => name; set => name = value; }
@@ -86,6 +90,7 @@ namespace TheStateOfTheState
         public General.ReligionTypes Religion { get => religion; set => religion = value; }
         public General.OrientationTypes Orientation { get => orientation; set => orientation = value; }
         public int Score { get => score; set => score = value; }
+        public Dictionary<string, string> Answers { get => answers; set => answers = value; }
 
         public bool Exist { get => exist; set => exist = value; }
 

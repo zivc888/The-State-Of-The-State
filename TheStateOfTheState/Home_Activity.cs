@@ -34,7 +34,7 @@ namespace TheStateOfTheState
         private List<QuestionClass> questions_info;
         private Dictionary<int, RadioGroup> questions;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -73,7 +73,7 @@ namespace TheStateOfTheState
             GetUserAsync(fbd, userId);
 
             /*
-            for (int i = 1; i <= General.Q_NUM; i++)
+            for (int i = 1; i <= await fbd.RetrieveQNUM(); i++)
             {
                 InitializeDB(i);
             }
@@ -89,10 +89,10 @@ namespace TheStateOfTheState
             questions_info = await fbd.RetrieveQuestions();
 
             questions = new Dictionary<int, RadioGroup>();
-            for (int i = 0; i < General.Q_NUM; i++)
+            for (int i = 0; i < await fbd.RetrieveQNUM(); i++)
             {
-                var resourceId = Resources.GetIdentifier("question_" + (i+1) + "_options", "id", PackageName);
-                questions.Add(i+1, FindViewById<RadioGroup>(resourceId));
+                var resourceId = Resources.GetIdentifier("question_" + (i + 1) + "_options", "id", PackageName);
+                questions.Add(i + 1, FindViewById<RadioGroup>(resourceId));
 
                 var titleId = Resources.GetIdentifier("question_" + (i + 1), "id", PackageName);
                 FindViewById<TextView>(titleId).Text = questions_info[i].Content;
@@ -104,7 +104,7 @@ namespace TheStateOfTheState
                 {
                     RadioButton answer_view = new RadioButton(this);
                     answer_view.Text = answer.Content;
-                    questions[i+1].AddView(answer_view);
+                    questions[i + 1].AddView(answer_view);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace TheStateOfTheState
             System.Environment.Exit(0);
         }
 
-        private async void UpdateDB(Results_Structure data, int questionId, string type, int answerId, User user)
+        private async void UpdateDB(Results_Structure data, int questionId, string type, int answerId, User user, int change)
         {
             // Get a reference to the 'Results' child node under the root node
             FirebaseDatabase firebase = FirebaseDatabase.GetInstance("https://the-state-of-the-state-default-rtdb.firebaseio.com");
@@ -124,16 +124,16 @@ namespace TheStateOfTheState
             switch (type)
             {
                 case General.KEY_ORI:
-                    tmp_update = data.Ori_Matrix["answer_"+answerId];
-                    DBRef.Child("option_" + (int)user.Orientation).SetValue(tmp_update["option_" + (int)user.Orientation] + 1);
+                    tmp_update = data.Ori_Matrix["answer_" + answerId];
+                    DBRef.Child("option_" + (int)user.Orientation).SetValue(tmp_update["option_" + (int)user.Orientation] + change);
                     break;
                 case General.KEY_REL:
                     tmp_update = data.Rel_Matrix["answer_" + answerId];
-                    DBRef.Child("option_" + (int)user.Religion).SetValue(tmp_update["option_" + (int)user.Religion] + 1);
+                    DBRef.Child("option_" + (int)user.Religion).SetValue(tmp_update["option_" + (int)user.Religion] + change);
                     break;
                 case General.KEY_GEN:
                     tmp_update = data.General_Matrix;
-                    DBRef.SetValue(tmp_update["answer_" + answerId] + 1);
+                    DBRef.SetValue(tmp_update["answer_" + answerId] + change);
                     break;
             }
         }
@@ -147,17 +147,33 @@ namespace TheStateOfTheState
             foreach (var question in questions)
             {
                 int a_num = question.Value.ChildCount;
+                RadioButton[] answers = new RadioButton[a_num];
+
                 for (int i = 0; i < a_num; i++)
                 {
-                    RadioButton answer = (RadioButton)question.Value.GetChildAt(i);
-                    if (answer.Checked)
+                    answers[i] = (RadioButton)question.Value.GetChildAt(i);
+                    if (answers[i].Checked)
                     {
                         Results_Structure tmp = await fbd.RetrieveResults(question.Key);
 
-                        UpdateDB(tmp, question.Key, General.KEY_ORI, i+1, user);
-                        UpdateDB(tmp, question.Key, General.KEY_REL, i+1, user);
-                        UpdateDB(tmp, question.Key, General.KEY_GEN, i+1, user);
-                        user.Score = user.Score + 1;
+                        if (user.Answers.ContainsKey("Q" + question.Key))
+                        {
+                            int to_remove = int.Parse(user.Answers["Q" + question.Key].Split("_")[1]);
+                            user.Answers.Remove("Q" + question.Key);
+                            UpdateDB(tmp, question.Key, General.KEY_ORI, to_remove, user, -1);
+                            UpdateDB(tmp, question.Key, General.KEY_REL, to_remove, user, -1);
+                            UpdateDB(tmp, question.Key, General.KEY_GEN, to_remove, user, -1);
+                        }
+                        else
+                        {
+                            user.Score = user.Score + 1;
+                        }
+
+                        UpdateDB(tmp, question.Key, General.KEY_ORI, i + 1, user, 1);
+                        UpdateDB(tmp, question.Key, General.KEY_REL, i + 1, user, 1);
+                        UpdateDB(tmp, question.Key, General.KEY_GEN, i + 1, user, 1);
+
+                        user.Answers.Add("Q" + question.Key, "answer_" + (i + 1));
                     }
 
                 }
@@ -166,6 +182,12 @@ namespace TheStateOfTheState
             FirebaseDatabase firebase = FirebaseDatabase.GetInstance("https://the-state-of-the-state-default-rtdb.firebaseio.com");
             DatabaseReference usersRef = firebase.GetReference("users");
             usersRef.Child(userId).Child("score").SetValue(user.Score);
+
+            foreach (var answer in user.Answers)
+            {
+                usersRef.Child(userId).Child("answers").Child(answer.Key).SetValue(answer.Value);
+            }
+
             score.Text = "Score: " + user.Score;
         }
 
@@ -202,13 +224,16 @@ namespace TheStateOfTheState
             }
         }
 
-        private void InitializeDB(int questionId)
+        private async void InitializeDB(int questionId)
         {
+            fbd = new FB_Data();
+            questions_info = await fbd.RetrieveQuestions();
+
             // Get a reference to the 'Results' child node under the root node
             FirebaseDatabase firebase = FirebaseDatabase.GetInstance("https://the-state-of-the-state-default-rtdb.firebaseio.com");
             DatabaseReference DBRef = firebase.GetReference("Results/Q" + questionId);
 
-            for (int j = 1; j <= 5; j++)
+            for (int j = 1; j <= questions_info[questionId - 1].Answers.Count; j++)
             {
                 for (int i = 0; i < (int)General.OrientationTypes.Length; i++)
                 {

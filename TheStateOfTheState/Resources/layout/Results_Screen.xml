@@ -94,6 +94,28 @@
                         android:id="@+id/graph_2"
                     />
 
+                    <TextView
+                        android:id="@+id/question_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Question 3" />
+                    <oxyplot.xamarin.android.PlotView
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:id="@+id/graph_3"
+                    />
+
+                    <TextView
+                        android:id="@+id/question_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Question 4" />
+                    <oxyplot.xamarin.android.PlotView
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:id="@+id/graph_4"
+                    />
+
                     <!-- Add more questions as needed -->
                 </LinearLayout>
 

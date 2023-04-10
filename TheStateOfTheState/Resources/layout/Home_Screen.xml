@@ -101,16 +101,45 @@
                         <!-- Add more options as needed -->
                     </RadioGroup>
 
-                    <!-- Add more questions as needed -->
+                    <TextView
+                        android:id="@+id/question_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Question 3" />
+
+                    <RadioGroup
+                        android:id="@+id/question_3_options"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <!-- Add more options as needed -->
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/question_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Question 4" />
+
+                    <RadioGroup
+                        android:id="@+id/question_4_options"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <!-- Add more options as needed -->
+                    </RadioGroup>
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Submit"
+                        android:id="@+id/button_submit"
+                        android:layout_gravity="center"/>
                 </LinearLayout>
 
             </ScrollView>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Submit"
-                android:id="@+id/button_submit"
-                android:layout_gravity="center"/>
         </LinearLayout>
     </androidx.drawerlayout.widget.DrawerLayout>
 </LinearLayout>

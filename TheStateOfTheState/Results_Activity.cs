@@ -105,9 +105,9 @@ namespace TheStateOfTheState
             score.Text = "Score: " + user.Score;
         }
 
-        private void LoadData(FB_Data fbd)
+        private async void LoadData(FB_Data fbd)
         {
-            for (int i = 1; i <= General.Q_NUM; i++)
+            for (int i = 1; i <= await fbd.RetrieveQNUM(); i++)
             {
                 GetResultsAsync(fbd, i);
             }
