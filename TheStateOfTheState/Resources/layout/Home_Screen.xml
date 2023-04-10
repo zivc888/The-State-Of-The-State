@@ -83,24 +83,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <RadioButton
-                            android:id="@+id/question_1_option_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 1" />
-
-                        <RadioButton
-                            android:id="@+id/question_1_option_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 2" />
-
-                        <RadioButton
-                            android:id="@+id/question_1_option_3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 3" />
-
                         <!-- Add more options as needed -->
                     </RadioGroup>
 
@@ -113,25 +95,8 @@
                     <RadioGroup
                         android:id="@+id/question_2_options"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <RadioButton
-                            android:id="@+id/question_2_option_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 1" />
-
-                        <RadioButton
-                            android:id="@+id/question_2_option_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 2" />
-
-                        <RadioButton
-                            android:id="@+id/question_2_option_3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Option 3" />
+                        android:layout_height="wrap_content"
+                        >
 
                         <!-- Add more options as needed -->
                     </RadioGroup>

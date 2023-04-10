@@ -13,24 +13,38 @@ namespace TheStateOfTheState
 {
     public class QuestionClass
     {
-        List<AnswerClass> answers;
+        private string content, name;
+        private List<AnswerClass> answers;
         /*
          * 1: "answer_1":"..."
          * 2: "answer_2":"..."
          * ...
          */
 
-        public QuestionClass(List<Dictionary<string, string>> answers)
+        private QuestionClass(List<AnswerClass> answers, string name, string content)
         {
             this.answers = answers;
+            this.name = name;
+            this.content = content;
+        }
+
+        private QuestionClass(List<AnswerClass> answers, int questionId, string content)
+        {
+            this.answers = answers;
+            this.name = "Q" + questionId;
+            this.content = content;
         }
 
         public QuestionClass()
         {
-            answers = new List<Dictionary<string, string>>();
+            answers = new List<AnswerClass>();
+            name = "Q";
+            content = "Empty";
         }
 
         public List<AnswerClass> Answers { get => answers; set => answers = value; }
+        public string Name { get => name; set => name = value; }
+        public string Content { get => content; set => content = value; }
 
     }
 }

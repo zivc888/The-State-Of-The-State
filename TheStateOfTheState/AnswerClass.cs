@@ -11,15 +11,27 @@ using System.Text;
 
 namespace TheStateOfTheState
 {
-    internal class AnswerClass
+    public class AnswerClass
     {
-        string name;
-        string content;
+        private string name;
+        private string content;
 
         public AnswerClass(string name, string content)
         {
             this.name = name;
             this.content = content;
+        }
+
+        public AnswerClass(int answerId, string content)
+        {
+            this.name = "A" + answerId;
+            this.content = content;
+        }
+
+        public AnswerClass()
+        {
+            name = "";
+            content = "";
         }
 
         public string Name { get => name; set => name = value; }

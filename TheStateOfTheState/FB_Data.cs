@@ -72,5 +72,30 @@ namespace TheStateOfTheState
             res.Rel_Matrix = await firebase_client.Child("Results/Q" + questionId + "/religion").OnceSingleAsync<Dictionary<string, Dictionary<string, int>>>();
             return res;
         }
+        public async System.Threading.Tasks.Task<List<QuestionClass>> RetrieveQuestions()
+        {
+            List<QuestionClass> questions = new List<QuestionClass>();
+            var tmp = await firebase_client.Child("Questions").OnceSingleAsync<Dictionary<string, Dictionary<string, string>>>();
+            foreach(var q in tmp.Keys)
+            {
+                QuestionClass question = new QuestionClass();
+                var question_info = tmp[q];
+
+                for (int i = 0; i < question_info.Count-1; i++)
+                {
+                    AnswerClass answer = new AnswerClass();
+                    answer.Name = "answer_" + (i + 1);
+                    answer.Content = question_info["answer_" + (i + 1)];
+                    question.Answers.Add(answer);
+                }
+                question.Content = question_info["question"];
+                question.Name = q;
+
+                questions.Add(question);
+            }
+
+            return questions;
+        }
+
     }
 }

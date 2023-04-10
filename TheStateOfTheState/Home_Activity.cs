@@ -34,7 +34,6 @@ namespace TheStateOfTheState
         private List<QuestionClass> questions_info;
         private Dictionary<int, RadioGroup> questions;
 
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -49,12 +48,6 @@ namespace TheStateOfTheState
 
             // Initialize questions from server
             InitializeQuestions();
-            questions = new Dictionary<int, RadioGroup>();
-            for (int i = 1; i <= General.Q_NUM; i++)
-            {
-                var resourceId = Resources.GetIdentifier("question_" + i + "_options", "id", PackageName);
-                questions.Add(i, FindViewById<RadioGroup>(resourceId));
-            }
 
             // Set up the toolbar - menu + navigation
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -90,9 +83,30 @@ namespace TheStateOfTheState
             exit.Click += Exit_Click;
         }
 
-        private void InitializeQuestions()
+        private async void InitializeQuestions()
         {
-            throw new NotImplementedException();
+            fbd = new FB_Data();
+            questions_info = await fbd.RetrieveQuestions();
+
+            questions = new Dictionary<int, RadioGroup>();
+            for (int i = 0; i < General.Q_NUM; i++)
+            {
+                var resourceId = Resources.GetIdentifier("question_" + (i+1) + "_options", "id", PackageName);
+                questions.Add(i+1, FindViewById<RadioGroup>(resourceId));
+
+                var titleId = Resources.GetIdentifier("question_" + (i + 1), "id", PackageName);
+                FindViewById<TextView>(titleId).Text = questions_info[i].Content;
+
+                //answerListAdapter = new AnswerListAdapter(this, questions_info[i]);
+                //questions[i].Adapter = answerListAdapter;
+
+                foreach (var answer in questions_info[i].Answers)
+                {
+                    RadioButton answer_view = new RadioButton(this);
+                    answer_view.Text = answer.Content;
+                    questions[i+1].AddView(answer_view);
+                }
+            }
         }
 
         private void Exit_Click(object sender, EventArgs e)
@@ -138,7 +152,6 @@ namespace TheStateOfTheState
                     RadioButton answer = (RadioButton)question.Value.GetChildAt(i);
                     if (answer.Checked)
                     {
-                        Console.WriteLine("q index: " + question.Key);
                         Results_Structure tmp = await fbd.RetrieveResults(question.Key);
 
                         UpdateDB(tmp, question.Key, General.KEY_ORI, i+1, user);
@@ -195,7 +208,7 @@ namespace TheStateOfTheState
             FirebaseDatabase firebase = FirebaseDatabase.GetInstance("https://the-state-of-the-state-default-rtdb.firebaseio.com");
             DatabaseReference DBRef = firebase.GetReference("Results/Q" + questionId);
 
-            for (int j = 1; j <= 3; j++)
+            for (int j = 1; j <= 5; j++)
             {
                 for (int i = 0; i < (int)General.OrientationTypes.Length; i++)
                 {
