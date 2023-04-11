@@ -41,9 +41,6 @@ namespace TheStateOfTheState
                     context.StartActivity(surveysIntent);
                     break;
 
-                case Resource.Id.button_exit:
-                    System.Environment.Exit(0);
-                    break;
             }
 
             // Close the drawer after handling the selection

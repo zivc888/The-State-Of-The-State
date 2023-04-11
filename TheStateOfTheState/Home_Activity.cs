@@ -27,7 +27,7 @@ namespace TheStateOfTheState
         private NavigationView navigationView;
         private AndroidX.AppCompat.Widget.Toolbar toolbar;
 
-        private Button submit, exit;
+        private Button submit;
         private TextView name, score;
         private FB_Data fbd;
 
@@ -44,7 +44,6 @@ namespace TheStateOfTheState
             name = FindViewById<TextView>(Resource.Id.text_user_name);
             score = FindViewById<TextView>(Resource.Id.text_user_score);
             submit = FindViewById<Button>(Resource.Id.button_submit);
-            exit = FindViewById<Button>(Resource.Id.button_exit);
 
             // Initialize questions from server
             InitializeQuestions();
@@ -80,7 +79,6 @@ namespace TheStateOfTheState
             */
 
             submit.Click += Submit_Click;
-            exit.Click += Exit_Click;
         }
 
         private async void InitializeQuestions()
@@ -107,11 +105,6 @@ namespace TheStateOfTheState
                     questions[i + 1].AddView(answer_view);
                 }
             }
-        }
-
-        private void Exit_Click(object sender, EventArgs e)
-        {
-            System.Environment.Exit(0);
         }
 
         private async void UpdateDB(Results_Structure data, int questionId, string type, int answerId, User user, int change)
@@ -148,6 +141,7 @@ namespace TheStateOfTheState
             {
                 int a_num = question.Value.ChildCount;
                 RadioButton[] answers = new RadioButton[a_num];
+                bool is_change = false;
 
                 for (int i = 0; i < a_num; i++)
                 {
@@ -159,21 +153,44 @@ namespace TheStateOfTheState
                         if (user.Answers.ContainsKey("Q" + question.Key))
                         {
                             int to_remove = int.Parse(user.Answers["Q" + question.Key].Split("_")[1]);
-                            user.Answers.Remove("Q" + question.Key);
-                            UpdateDB(tmp, question.Key, General.KEY_ORI, to_remove, user, -1);
-                            UpdateDB(tmp, question.Key, General.KEY_REL, to_remove, user, -1);
-                            UpdateDB(tmp, question.Key, General.KEY_GEN, to_remove, user, -1);
+
+                            if (to_remove != i + 1)
+                            {
+                                Console.WriteLine(to_remove);
+                                Console.WriteLine(i+1);
+                                user.Answers.Remove("Q" + question.Key);
+                                UpdateDB(tmp, question.Key, General.KEY_ORI, to_remove, user, -1);
+                                UpdateDB(tmp, question.Key, General.KEY_REL, to_remove, user, -1);
+                                UpdateDB(tmp, question.Key, General.KEY_GEN, to_remove, user, -1);
+                                is_change = true;
+                            }
+
                         }
                         else
                         {
+                            is_change = true;
                             user.Score = user.Score + 1;
                         }
 
-                        UpdateDB(tmp, question.Key, General.KEY_ORI, i + 1, user, 1);
-                        UpdateDB(tmp, question.Key, General.KEY_REL, i + 1, user, 1);
-                        UpdateDB(tmp, question.Key, General.KEY_GEN, i + 1, user, 1);
+                        if (is_change)
+                        {
+                            UpdateDB(tmp, question.Key, General.KEY_ORI, i + 1, user, 1);
+                            UpdateDB(tmp, question.Key, General.KEY_REL, i + 1, user, 1);
+                            UpdateDB(tmp, question.Key, General.KEY_GEN, i + 1, user, 1);
 
-                        user.Answers.Add("Q" + question.Key, "answer_" + (i + 1));
+                            user.Answers.Add("Q" + question.Key, "answer_" + (i + 1));
+
+                            // Get the Vibrator service
+                            Vibrator vibrator = (Vibrator)GetSystemService(Context.VibratorService);
+
+                            // Check if the device has vibrator support
+                            if (vibrator.HasVibrator)
+                            {
+                                // Vibrate for 500 milliseconds
+                                vibrator.Vibrate(125);
+                            }
+                        }
+
                     }
 
                 }

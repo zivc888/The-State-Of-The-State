@@ -27,7 +27,7 @@ namespace TheStateOfTheState
         private NavigationView navigationView;
         private AndroidX.AppCompat.Widget.Toolbar toolbar;
 
-        private Button exit;
+        private Button by_rel, by_ori;
         private TextView name, score;
         private FB_Data fbd;
 
@@ -40,7 +40,8 @@ namespace TheStateOfTheState
 
             name = FindViewById<TextView>(Resource.Id.text_user_name);
             score = FindViewById<TextView>(Resource.Id.text_user_score);
-            exit = FindViewById<Button>(Resource.Id.button_exit);
+            by_rel = FindViewById<Button>(Resource.Id.button_rel);
+            by_ori = FindViewById<Button>(Resource.Id.button_ori);
 
             // Set up the toolbar
             drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
@@ -65,13 +66,20 @@ namespace TheStateOfTheState
             // Retrieve the user data
             GetUserAsync(fbd, userId);
 
-            LoadData(fbd);
-            exit.Click += Exit_Click;
+            LoadData(fbd, General.KEY_ORI);
+
+            by_rel.Click += By_rel_Click;
+            by_ori.Click += By_ori_Click;
         }
 
-        private void Exit_Click(object sender, EventArgs e)
+        private void By_ori_Click(object sender, EventArgs e)
         {
-            System.Environment.Exit(0);
+            LoadData(fbd, General.KEY_ORI);
+        }
+
+        private void By_rel_Click(object sender, EventArgs e)
+        {
+            LoadData(fbd, General.KEY_REL);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -105,17 +113,15 @@ namespace TheStateOfTheState
             score.Text = "Score: " + user.Score;
         }
 
-        private async void LoadData(FB_Data fbd)
+        private async void LoadData(FB_Data fbd, string type)
         {
             for (int i = 1; i <= await fbd.RetrieveQNUM(); i++)
             {
-                GetResultsAsync(fbd, i);
+                GetResultsAsync(fbd, i, type);
             }
         }
-        private async void GetResultsAsync(FB_Data fbd, int questionId)
+        private async void GetResultsAsync(FB_Data fbd, int questionId, string type)
         {
-            var type = General.KEY_ORI;
-
             // Retrieve question results object from Firebase
             var tmp = await fbd.RetrieveResults(questionId);
             LoadGraph(tmp, questionId, type);
@@ -146,13 +152,16 @@ namespace TheStateOfTheState
 
             // Answers - X axis
             var tmp = new Dictionary<string, Dictionary<string, int>>();
+            int len = 0;
             if (type == General.KEY_ORI)
             {
                 tmp = data.Ori_Matrix;
+                len = (int)General.OrientationTypes.Length;
             }
             else //if(type == General.KEY_REL)
             {
                 tmp = data.Rel_Matrix;
+                len = (int)General.ReligionTypes.Length;
             }
 
             foreach (var i in tmp.Keys)
@@ -171,11 +180,21 @@ namespace TheStateOfTheState
             plotModel.Axes.Add(valueAxis);
 
             // Options - sub X axis
-            for (int i = 0; i < (int)General.OrientationTypes.Length; i++)
+            for (int i = 0; i < len; i++)
             {
+                string title = "";
+                if (type == General.KEY_ORI)
+                {
+                    title = ((General.OrientationTypes)i).ToString();
+                }
+                else //if(type == General.KEY_REL)
+                {
+                    title = ((General.ReligionTypes)i).ToString();
+                }
+
                 var series = new ColumnSeries
                 {
-                    Title = ((General.OrientationTypes)i).ToString(),
+                    Title = title,
                     FillColor = colors[i],
                     StrokeColor = OxyColors.Black,
                     StrokeThickness = 1

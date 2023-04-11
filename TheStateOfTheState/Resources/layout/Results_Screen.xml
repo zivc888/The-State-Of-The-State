@@ -43,14 +43,6 @@
                     android:textSize="20dp"
                     android:id="@+id/text_user_score"
             />
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="EXIT"
-                    android:id="@+id/button_exit"
-                    android:background="#cc0000"
-                    android:layout_gravity="center"
-                    />
             </LinearLayout>
 
         </com.google.android.material.navigation.NavigationView>
@@ -59,13 +51,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layoutDirection="ltr">
+            android:layoutDirection="ltr"
+            android:layout_marginTop="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="5"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:id="@+id/button_ori"
+                    android:text="by orientation"
+                    android:layout_marginRight="10dp"/>
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:id="@+id/button_rel"
+                    android:text="by religion"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
 
             <!-- Scrollable list of survey questions -->
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
