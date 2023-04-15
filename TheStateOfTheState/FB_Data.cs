@@ -54,10 +54,6 @@ namespace TheStateOfTheState
         {
             return auth.SignInWithEmailAndPassword(email, password);
         }
-        public Android.Gms.Tasks.Task ResetPassword(string email)
-        {
-            return auth.SendPasswordResetEmail(email);
-        }
 
         public async System.Threading.Tasks.Task<User> RetrieveUser(string userId)
         {

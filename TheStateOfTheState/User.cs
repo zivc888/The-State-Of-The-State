@@ -15,12 +15,12 @@ namespace TheStateOfTheState
 {
     internal class User
     {
-        string name, mail, pwd, city;
-        int age;
-        General.ReligionTypes religion;
-        General.OrientationTypes orientation;
-        bool exist;
-        readonly SP_data spd;
+        private string name, mail, pwd, city;
+        private int age;
+        private General.ReligionTypes religion;
+        private General.OrientationTypes orientation;
+        private bool exist;
+        private readonly SP_data spd;
 
         int score;
         Dictionary<string, string> answers;

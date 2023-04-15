@@ -141,12 +141,6 @@ namespace TheStateOfTheState
             Toast.MakeText(this, msg, ToastLength.Long).Show();
         }
 
-        private void Reset_Click(object sender, System.EventArgs e)
-        {
-            tskReset = fbd.ResetPassword(user.Mail);
-            tskReset.AddOnCompleteListener(this);
-        }
-
         private void SaveToFirebase()
         {
             // Get a reference to the 'users' child node under the root node
